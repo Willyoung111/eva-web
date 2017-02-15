@@ -1,0 +1,75 @@
+{% extends "admin/base.html" %}
+
+{%  block page_content%}
+    <div class="container">
+        <table class="table" >
+	        <caption>维修记录</caption>
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>时间</th>
+                    <th>送修者</th>
+                    <th>手机或QQ</th>
+                    <th>问题描述</th>
+                    <th>电脑型号</th>
+                    <th>电脑密码</th>
+                    <th>是否拆机</th>
+                    <th>是否解决</th>
+                    <th>维修者</th>
+                    <th>确认取回</th>
+                    <th>修改</th>
+                </tr>
+            </thead>
+            {% for result in results %}
+            <tbody>
+                {% if result.verify %}
+                <tr class="alert-success">
+                    <td>{{ result.id }}</td>
+                    <td>{{ result.create_time }}</td>
+                    <td>{{ result.user }}</td>
+                    <td>{{ result.phone }}</td>
+                    <td>{{ result.problem }}</td>
+                    <td>{{ result.computer_type }}</td>
+                    <td>{{ result.computer_password }}</td>
+                    <td>{{ result.split }}</td>
+                    <td>{{ result.solve }}</td>
+                    <td>{{ result.mender }}</td>
+                    <td>{{ result.verify }}</td>
+                    <td>
+                        <form method="POST">
+                            {{ form.hidden_tag() }}
+                            {{ form.submit() }}
+                            <div style="display:none">{{ form.id(value=result.id) }}</div>
+                            <!-- 这里可能看不懂，我把返回id的文本框给隐藏了 -->
+                        </form>
+                    </td>
+                </tr>
+                {% else  %}
+                <tr class="alert-warning">
+                    <td>{{ result.id }}</td>
+                    <td>{{ result.create_time }}</td>
+                    <td>{{ result.user }}</td>
+                    <td>{{ result.phone }}</td>
+                    <td>{{ result.problem }}</td>
+                    <td>{{ result.computer_type }}</td>
+                    <td>{{ result.computer_password }}</td>
+                    <td>{{ result.split }}</td>
+                    <td>{{ result.solve }}</td>
+                    <td>{{ result.mender }}</td>
+                    <td>{{ result.verify }}</td>
+                    <td>
+                        <form method="POST">
+                            {{ form.hidden_tag() }}
+                            {{ form.submit() }}
+                            <div style="display:none">{{ form.id(value=result.id) }}</div>
+                            <!-- 这里可能看不懂，我把返回id的文本框给隐藏了 -->
+                        </form>
+                    </td>
+                </tr>
+                {% endif %}
+
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,10 @@
+config.py
+config.pyc
+logs
+venv
+*.ini
+*.sock
+*.conf
+migrations
+.idea
+
