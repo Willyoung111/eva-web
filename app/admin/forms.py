@@ -7,7 +7,7 @@ from wtforms.ext.sqlalchemy.fields import QuerySelectField
 
 
 class LoginForm(FlaskForm):
-    username = StringField(u'帐号', validators=[Required(), length(6, 64)])
+    username = StringField(u'帐号', validators=[Required(), length(6, 18)])
     password = PasswordField(u'密码', validators=[Required()])
     submit = SubmitField(u'登入')
 
@@ -22,16 +22,17 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField(u'注册')
 
 
-class EditRecodeForm(FlaskForm):
-    user = StringField(u'物主姓名:', validators=[Required(), length(2, 5)])
-    phone = StringField(u'手机号或QQ号:', validators=[Required(), length(6, 11), Regexp('[0-9]')])
-    problem = TextAreaField(u'请描述您的问题:')
-    computer_type = StringField(u'您的电脑型号:')
+class EditRecordForm(FlaskForm):
+    user = StringField(u'物主姓名:', validators=[Required(), length(2, 5, message=u'姓名只允许二到五个字！')])
+    phone = StringField(u'手机号或QQ号:', validators=[Required(), length(6, 11, message=u'只允许6-11位数字'), Regexp('[0-9]')])
+    problem = TextAreaField(u'请描述您的问题:', validators=[Required()])
+    computer_type = StringField(u'您的电脑型号:', validators=[Required()])
     computer_password = StringField(u'您的电脑密码（可不填）:')
-    split = BooleanField(u'是否拆机：')
-    solve = BooleanField(u'是否解决：')
-    mender = StringField(u'维修者姓名：')
-    verify = BooleanField(u'是否取回：')
+    split = BooleanField(u'是否拆机')
+    solve = BooleanField(u'是否解决')
+    mender = StringField(u'维修者姓名：', validators=[Required()])
+    verify = BooleanField(u'是否取回')
+    delete = StringField(u'如果你要删除这条记录，输入“确认删除”之后点击提交！否则请留空。')
     submit = SubmitField(u'提交')
 
 

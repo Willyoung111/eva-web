@@ -3,14 +3,16 @@
 from . import db, login_manager
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash  # 引入密码加密 验证方法
-from flask_login import UserMixin  # 引入flask-login用户模型继承类方�?
+from flask_login import UserMixin  # 引入flask-login用户模型继承类方法
+from sqlalchemy.sql import func
 
 
 class Record(db.Model):
     __tablename__ = 'record'
     id = db.Column(db.Integer, primary_key=True)
-    create_time = db.Column(db.DATETIME, default=datetime.utcnow())
-    user = db.Column(db.String(5))
+    create_time = db.Column(db.DATETIME)
+    random_id = db.Column(db.Integer, unique=True)
+    user = db.Column(db.String(64))
     phone = db.Column(db.String(64))
     problem = db.Column(db.Text)
     computer_type = db.Column(db.String(64))

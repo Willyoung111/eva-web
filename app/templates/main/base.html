@@ -1,5 +1,15 @@
 {% extends "bootstrap/base.html" %}
 {% block title %}E志者维修登记平台{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}"
+type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}"
+type="image/x-icon">
+{% endblock %}
+
+
 {% block navbar %}
 <div class="navbar navbar-inverse" role="navigation">
     <div class="container">
@@ -18,8 +28,10 @@
                 <li><a href="/user/verify">确认取回</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                {% if 0==1 %}
                 <li><a href="{{ url_for('admin.register') }}">注册</a></li>
-                <li><a href="{{ url_for('admin.login') }}">管理员登入</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('admin.record') }}">管理员</a></li>
             </ul>
         </div>
     </div>

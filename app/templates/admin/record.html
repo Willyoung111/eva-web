@@ -8,6 +8,7 @@
                 <tr>
                     <th>序号</th>
                     <th>时间</th>
+                    <th>识别码</th>
                     <th>送修者</th>
                     <th>手机或QQ</th>
                     <th>问题描述</th>
@@ -26,6 +27,7 @@
                 <tr class="alert-success">
                     <td>{{ result.id }}</td>
                     <td>{{ result.create_time }}</td>
+                    <td>{{ result.random_id }}</td>
                     <td>{{ result.user }}</td>
                     <td>{{ result.phone }}</td>
                     <td>{{ result.problem }}</td>
@@ -48,6 +50,7 @@
                 <tr class="alert-warning">
                     <td>{{ result.id }}</td>
                     <td>{{ result.create_time }}</td>
+                    <td>{{ result.random_id }}</td>
                     <td>{{ result.user }}</td>
                     <td>{{ result.phone }}</td>
                     <td>{{ result.problem }}</td>
@@ -67,7 +70,6 @@
                     </td>
                 </tr>
                 {% endif %}
-
             </tbody>
             {% endfor %}
         </table>

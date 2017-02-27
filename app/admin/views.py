@@ -2,7 +2,7 @@
 from . import admin
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user, login_user, logout_user
-from forms import LoginForm, RegistrationForm, EditRecodeForm, ModifyForm
+from forms import LoginForm, RegistrationForm, EditRecordForm, ModifyForm
 from ..models import User, Record
 from .. import db
 
@@ -38,11 +38,15 @@ def register():
                 flash(u'两次输入密码不一')
                 return redirect(url_for('admin.register'))
             else:
-                user = User(username=form.username.data, password=form.password.data)
-                db.session.add(user)
-                db.session.commit()
-                flash(u'您已经成功注册')
-                return redirect(url_for('admin.login'))
+                try:
+                    user = User(username=form.username.data, password=form.password.data)
+                    db.session.add(user)
+                    db.session.commit()
+                    flash(u'您已经成功注册')
+                    return redirect(url_for('admin.login'))
+                except:
+                    db.session.rollback()
+                    flash(u'用户名已存在')
     return render_template('admin/register.html', form=form)
 
 
@@ -68,30 +72,47 @@ def record():
 @login_required
 def modify(id):
     re = db.session.query(Record).filter(Record.id == id).one()
-    form = EditRecodeForm(user=re.user, phone=re.phone, problem=re.problem, computer_type=re.computer_type,
+    form = EditRecordForm(user=re.user, phone=re.phone, problem=re.problem, computer_type=re.computer_type,
                           computer_password=re.computer_password, split=re.split, solve=re.solve, mender=re.mender,
                           verify=re.verify)
     if form.validate_on_submit():
-        cord = Record.query.get_or_404(id)
-        cord.user = form.user.data
-        cord.phone = form.phone.data
-        cord.problem=form.problem.data
-        cord.computer_type=form.computer_type.data
-        cord.computer_password=form.computer_password.data
-        cord.mender=form.mender.data
-        if form.split.data:
-            cord.split = True
+        if form.delete.data == u"确认删除":
+            cord = Record.query.get_or_404(id)
+            try:
+                db.session.delete(cord)
+                db.session.commit()
+                return redirect(url_for('admin.record'))
+            except:
+                flash(u'删除失败，请联系管理员。')
+                return redirect(url_for('admin.modify', id=id))
+        elif form.delete.data == "":
+            cord = Record.query.get_or_404(id)
+            cord.user = form.user.data
+            cord.phone = form.phone.data
+            cord.problem = form.problem.data
+            cord.computer_type = form.computer_type.data
+            cord.computer_password = form.computer_password.data
+            cord.mender = form.mender.data
+            if form.split.data:
+                cord.split = True
+            else:
+                cord.split = False
+            if form.solve.data:
+                cord.solve = True
+            else:
+                cord.solve = False
+            if form.verify.data:
+                cord.verify = True
+            else:
+                cord.verify = False
+            try:
+                db.session.add(cord)
+                db.session.commit()
+                return redirect(url_for('admin.record'))
+            except:
+                flash(u'提交失败')
+                return redirect(url_for('admin.modify', id=id))
         else:
-            cord.split = False
-        if form.solve.data:
-            cord.solve = True
-        else:
-            cord.solve = False
-        if form.verify.data:
-            cord.verify = True
-        else:
-            cord.verify = False
-        db.session.add(cord)
-        db.session.commit()
-        return redirect(url_for('admin.record'))
-    return render_template("admin/modify.html", form=form, id=re.id, time=re.create_time)
+            flash(u'删除栏输入有误，请重新输入')
+            return redirect(url_for('admin.modify', id=id))
+    return render_template("admin/modify.html", form=form, id=re.id, time=re.create_time, random_id=re.random_id)
